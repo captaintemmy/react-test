@@ -19,18 +19,11 @@ import {
 
 const dummyData = ["Item 1", "Item 2", "Item 3", "Item 4"];
 const frameworks1 = [
-  { value: "next.js", label: "Next.js" },
-  { value: "sveltekit", label: "SvelteKit" },
-  { value: "nuxt.js", label: "Nuxt.js" },
-  { value: "remix", label: "Remix" },
-  { value: "astro", label: "Astro" },
-];
-const frameworks2 = [
-  { value: "test.1", label: "test.1" },
-  { value: "test.2", label: "test.2" },
-  { value: "test.3", label: "test.3" },
-  { value: "test.4", label: "test.4" },
-  { value: "test.5", label: "test.5" },
+  { value: "Action button", label: "Action button" },
+  { value: "Date picker", label: "Date picker" },
+  { value: "Dropdown", label: "Dropdown" },
+  { value: "Large text input", label: "Large text input" },
+  { value: "Text input", label: "Text input" },
 ];
 
 const SuperSimple: React.FC = () => {
@@ -39,6 +32,7 @@ const SuperSimple: React.FC = () => {
   const [dragEnabled, setDragEnabled] = React.useState(false); // Dragging is off by default
   const [selectedFramework1, setSelectedFramework1] = React.useState(""); // State for first combobox
   const [selectedFramework2, setSelectedFramework2] = React.useState(""); // State for second combobox
+  const [inputValue, setInputValue] = React.useState(""); // State for input field
 
   const toggleAccordion = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index); // Close if already open, otherwise open
@@ -70,24 +64,22 @@ const SuperSimple: React.FC = () => {
           setItems(arrayMove(items, oldIndex, newIndex))
         }
         renderList={({ children, props }) => (
-          <ul {...props} className="list-none p-2 w-full max-w-md">
+          <ul {...props} className="list-none p-2 w-full max-w-2xl">
             {children}
           </ul>
         )}
         renderItem={({ value, props, isDragged }) => (
           <li
             {...props}
-            className={`p-2 mb-2 border border-[#225055] rounded-xl flex flex-col ${
-              isDragged ? "bg-gray-200" : "bg-white"
-            }`}
+            className={`p-2 mb-2 border border-[#225055] rounded-xl flex flex-col ${isDragged ? "bg-gray-200" : "bg-white"
+              }`}
           >
             {/* Accordion Header */}
-            <div className="flex items-center">
+            <div className="flex items-center   ">
               {/* Drag handle (conditionally rendered with fade-in effect) */}
               <div
-                className={`mr-4 w-8 h-8 flex items-center justify-center transition-opacity duration-300 ${
-                  dragEnabled ? "opacity-100" : "opacity-0"
-                }`}
+                className={`mr-4  w-8 h-8 flex items-center justify-center transition-opacity duration-300 ${dragEnabled ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <span
                   className="drag-handle cursor-grab text-gray-500 hover:text-gray-700 flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full"
@@ -97,7 +89,7 @@ const SuperSimple: React.FC = () => {
               </div>
               {/* Item text */}
               <span
-                className="flex-1 text-[#225055] text-center cursor-pointer"
+                className="flex-1 text-[#225055] text-center cursor-pointer "
                 onClick={() => toggleAccordion(items.indexOf(value))}
               >
                 {value}
@@ -110,35 +102,36 @@ const SuperSimple: React.FC = () => {
                 {expandedIndex === items.indexOf(value) ? "▲" : "▼"}
               </span>
             </div>
+
+
             {/* Accordion Content */}
             <div
-              className={`overflow-hidden transition-all duration-300 ${
-                expandedIndex === items.indexOf(value) ? "max-h-60" : "max-h-0"
-              }`}
+              className={`overflow-hidden transition-all duration-300 ${expandedIndex === items.indexOf(value) ? "max-h-60" : "max-h-0"
+                }`}
             >
-              <div className="mt-2 p-2 bg-gray-100 rounded overflow-y-auto max-h-40">
+              <div className="mt-2 p-2 bg-gray-100 rounded overflow-y-auto max-h-70 border border-black">
                 <p className="text-gray-700">
                   This is the dropdown menu for {value}.
                 </p>
+
                 {/* Combobox1 */}
-                <div className="mt-4">
+                <div className="flex justify-center mt-4">
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         role="combobox"
                         aria-expanded={expandedIndex === items.indexOf(value)}
-                        className="w-[200px] justify-between"
+                        className="w-[60%] h-12 justify-between text-lg"
                       >
                         {selectedFramework1
                           ? frameworks1.find(
-                              (framework) =>
-                                framework.value === selectedFramework1
-                            )?.label
+                            (framework) => framework.value === selectedFramework1
+                          )?.label
                           : "Select framework..."}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
+                    <PopoverContent className="w-[100%] p-0">
                       <Command>
                         <CommandList>
                           <CommandEmpty>No framework found.</CommandEmpty>
@@ -149,9 +142,7 @@ const SuperSimple: React.FC = () => {
                                 value={framework.value}
                                 onSelect={(currentValue) =>
                                   setSelectedFramework1(
-                                    currentValue === selectedFramework1
-                                      ? ""
-                                      : currentValue
+                                    currentValue === selectedFramework1 ? "" : currentValue
                                   )
                                 }
                               >
@@ -164,52 +155,39 @@ const SuperSimple: React.FC = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
-                {/* Combobox2 */}
-                <div className="mt-4">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={expandedIndex === items.indexOf(value)}
-                        className="w-[200px] justify-between"
-                      >
-                        {selectedFramework2
-                          ? frameworks2.find(
-                              (framework) =>
-                                framework.value === selectedFramework2
-                            )?.label
-                          : "Select framework..."}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>No framework found.</CommandEmpty>
-                          <CommandGroup>
-                            {frameworks2.map((framework) => (
-                              <CommandItem
-                                key={framework.value}
-                                value={framework.value}
-                                onSelect={(currentValue) =>
-                                  setSelectedFramework2(
-                                    currentValue === selectedFramework2
-                                      ? ""
-                                      : currentValue
-                                  )
-                                }
-                              >
-                                {framework.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+
+                {/* Conditionally Render Text Input Field */}
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${selectedFramework1 === "Text input" ? "max-h-20" : "max-h-0"
+                    }`}
+                >
+                  <div className="mt-4 justify-center items-center flex">
+                    <input
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      placeholder="Enter text..."
+                      className="w-full max-w-[60%] p-2 border border-gray-300 rounded"
+                    />
+                  </div>
+                </div>
+                {/* Conditionally Render Large Text Input Field */}
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${selectedFramework1 === "Large text input" ? "max-h-48" : "max-h-0"
+                    }`}
+                >
+                  <div className="mt-4 justify-center items-center flex">
+                    <textarea
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      placeholder="Enter large text..."
+                      className="w-full max-w-[60%] p-4 border border-gray-300 rounded h-27 resize-none" // Fixed size, slightly larger
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
           </li>
         )}
         disabled={!dragEnabled} // Disable dragging when dragEnabled is false
@@ -217,4 +195,5 @@ const SuperSimple: React.FC = () => {
     </div>
   );
 };
+
 export default SuperSimple;
