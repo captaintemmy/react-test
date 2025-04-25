@@ -37,7 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 
-## I have dowloaded some things here they are:
+## I have added some things to the project, here they are:
 https://www.npmjs.com/package/react-movable command: npm add react-movable
 
 https://ui.shadcn.com/docs/components/switch command: npx shadcn@latest add switch
