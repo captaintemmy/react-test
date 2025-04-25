@@ -49,3 +49,5 @@ https://ui.shadcn.com/docs/components/command#installation command: npx shadcn@l
 https://ui.shadcn.com/docs/components/button command: npx shadcn@latest add button
 
 https://ui.shadcn.com/docs/components/checkbox command: npx shadcn@latest add checkbox
+
+https://ui.shadcn.com/docs/components/calendar#installation command: npx shadcn@latest add calendar

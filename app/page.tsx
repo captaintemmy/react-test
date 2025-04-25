@@ -4,6 +4,8 @@ import * as React from "react";
 import { List, arrayMove } from "react-movable";
 import { Switch } from "@/components/ui/switch"; // Adjust the import path based on your project structure
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar"
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -11,7 +13,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
@@ -28,6 +29,7 @@ const frameworks1 = [
 ];
 
 const SuperSimple: React.FC = () => {
+  const [dropdownData, setDropdownData] = React.useState<string[]>([""]); // State for dropdown options
   const [items, setItems] = React.useState(dummyData);
   const [expandedIndex, setExpandedIndex] = React.useState<number | null>(null);
   const [dragEnabled, setDragEnabled] = React.useState(false); // Dragging is off by default
@@ -40,6 +42,7 @@ const SuperSimple: React.FC = () => {
     dropdown: "number", // Default dropdown value
   }); // State for small text input
   const [largeText, setLargeText] = React.useState(""); // State for large text input
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(); // State for selected date
 
   const toggleAccordion = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index); // Close if already open, otherwise open
@@ -104,10 +107,10 @@ const SuperSimple: React.FC = () => {
 
             {/* Accordion Content */}
             <div
-              className={`overflow-hidden overflow-y-auto duration-300 ${expandedIndex === items.indexOf(value) ? "max-h-60" : "max-h-0"
+              className={`overflow-hidden duration-300 ${expandedIndex === items.indexOf(value) ? "max-h-70" : "max-h-0"
                 }`}
             >
-              <div className="mt-2 p-2 bg-gray-100 rounded max-h-70 border border-black">
+              <div className="mt-2 p-2 bg-gray-100 rounded overflow-y-auto max-h-70 border border-black">
                 <p className="text-gray-700">
                   This is the dropdown menu for {value}.
                 </p>
@@ -153,6 +156,24 @@ const SuperSimple: React.FC = () => {
                     </PopoverContent>
                   </Popover>
                 </div>
+
+                {/* Conditionally Render Date Picker */}
+                {selectedFramework1 === "Date picker" && (
+                  <div className="mt-4">
+                    {/* Checkbox */}
+                    <div className="flex justify-center items-center">
+                      <Checkbox
+                        checked={smallText.checked}
+                        onCheckedChange={(checked) =>
+                          setSmallText((prev) => ({ ...prev, checked: Boolean(checked) }))
+                        }
+                      />
+                      <label className="ml-2 flex justify-center items-center text-gray-700">
+                        Read only
+                      </label>
+                    </div>
+                  </div>
+                )}
 
                 {/* Conditionally Render Small Text Input */}
                 {selectedFramework1 === "Text input" && (
@@ -214,13 +235,12 @@ const SuperSimple: React.FC = () => {
                 {/* Conditionally Render Action Button Input Fields */}
                 {selectedFramework1 === "Action button" && (
                   <div
-                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Action button" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Action button" ? " opacity-100" : "opacity-0"
                       }`}
                   >
                     <div
                       className={`mt-4 grid ${inputValue.length > 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-2"
-                        } gap-4 w-full max-w-[150%] overflow-y-auto`}
-                      style={{ maxHeight: "300px" }} // Set a max height for the container
+                        } gap-4 w-full max-w-[150%]`}
                       ref={(el) => {
                         if (el) {
                           setTimeout(() => {
@@ -265,6 +285,68 @@ const SuperSimple: React.FC = () => {
                               }}
                             >
                               X
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      <div className="h-10"></div> {/* Add some padding at the bottom */}
+                    </div>
+                  </div>
+                )}
+
+                {/* Conditionally Render Dropdown Input Fields */}
+                {selectedFramework1 === "Dropdown" && (
+                  <div
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Dropdown" ? "opacity-100 " : "opacity-0 "
+                      }`}
+                  >
+                    <div
+                      className={`mt-4 grid ${dropdownData.length > 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-2"
+                        } gap-4 w-full max-w-[150%] overflow-y-auto`}// Set a max height for the container
+                      ref={(el) => {
+                        if (el) {
+                          setTimeout(() => {
+                            el.scrollTop = el.scrollHeight; // Scroll to the bottom when a new option is added
+                          }, 0); // Ensure this happens after the DOM updates
+                        }
+                      }}
+                    >
+                      {dropdownData.map((value, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            value={value}
+                            onChange={(e) => {
+                              const newDropdownData = [...dropdownData];
+                              newDropdownData[index] = e.target.value;
+                              setDropdownData(newDropdownData);
+
+                              // Add a new dropdown option if the user is typing in the last one
+                              if (
+                                index === dropdownData.length - 1 &&
+                                e.target.value !== ""
+                              ) {
+                                setDropdownData([...newDropdownData, ""]);
+                              }
+                            }}
+                            placeholder="Enter dropdown option"
+                            className="p-2 border border-gray-300 rounded flex-1"
+                          />
+                          {index >= 2 && ( // Prevent removing the first two options
+                            <button
+                              onClick={() => {
+                                const newDropdownData = dropdownData.filter((_, i) => i !== index);
+                                setDropdownData(newDropdownData);
+                              }}
+                              className="p-2 bg-black text-white font-bold text-lg rounded-full hover:bg-red-600 hover:scale-110 transition-transform"
+                              style={{
+                                width: "25px",
+                                height: "25px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              -
                             </button>
                           )}
                         </div>
