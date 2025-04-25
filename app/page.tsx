@@ -232,130 +232,127 @@ const SuperSimple: React.FC = () => {
                   </div>
                 )}
 
-                {/* Conditionally Render Action Button Input Fields */}
-                {selectedFramework1 === "Action button" && (
-                  <div
-                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Action button" ? " opacity-100" : "opacity-0"
-                      }`}
-                  >
-                    <div
-                      className={`mt-4 grid ${inputValue.length > 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-2"
-                        } gap-4 w-full max-w-[150%]`}
-                      ref={(el) => {
-                        if (el) {
-                          setTimeout(() => {
-                            el.scrollTop = el.scrollHeight; // Scroll to the bottom when a new input is added
-                          }, 0); // Ensure this happens after the DOM updates
-                        }
-                      }}
-                    >
-                      {inputValue.map((value, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <input
-                            value={value}
-                            onChange={(e) => {
-                              const newInputValue = [...inputValue];
-                              newInputValue[index] = e.target.value;
-                              setInputValue(newInputValue);
+{/* Conditionally Render Action Button Input Fields */}
+{selectedFramework1 === "Action button" && (
+  <div
+    className={`transition-all duration-500 ease-in-out overflow-hidden ${
+      selectedFramework1 === "Action button" ? "opacity-100" : "opacity-0"
+    }`}
+  >
+    <div
+      className={`mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full`}
+      ref={(el) => {
+        if (el) {
+          setTimeout(() => {
+            el.scrollTop = el.scrollHeight; // Scroll to the bottom when a new input is added
+          }, 0); // Ensure this happens after the DOM updates
+        }
+      }}
+    >
+      {inputValue.map((value, index) => (
+        <div key={index} className="flex items-center space-x-2">
+          <input
+            value={value}
+            onChange={(e) => {
+              const newInputValue = [...inputValue];
+              newInputValue[index] = e.target.value;
+              setInputValue(newInputValue);
 
-                              // Add a new input field if the user is typing in the last one
-                              if (
-                                index === inputValue.length - 1 &&
-                                e.target.value !== ""
-                              ) {
-                                setInputValue([...newInputValue, ""]);
-                              }
-                            }}
-                            placeholder="Enter text"
-                            className="p-2 border border-gray-300 rounded flex-1"
-                          />
-                          {index >= 2 && ( // Prevent removing the first two inputs
-                            <button
-                              onClick={() => {
-                                const newInputValue = inputValue.filter((_, i) => i !== index);
-                                setInputValue(newInputValue);
-                              }}
-                              className="p-2 bg-black text-white  text-lg rounded-full hover:bg-red-600 hover:scale-110 transition-transform"
-                              style={{
-                                width: "25px",
-                                height: "25px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              X
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                      <div className="h-10"></div> {/* Add some padding at the bottom */}
-                    </div>
-                  </div>
-                )}
+              // Add a new input field if the user is typing in the last one
+              if (
+                index === inputValue.length - 1 &&
+                e.target.value !== ""
+              ) {
+                setInputValue([...newInputValue, ""]);
+              }
+            }}
+            placeholder="Enter text"
+            className="p-2 border border-gray-300 rounded flex-1"
+          />
+          {index >= 2 && ( // Prevent removing the first two inputs
+            <button
+              onClick={() => {
+                const newInputValue = inputValue.filter((_, i) => i !== index);
+                setInputValue(newInputValue);
+              }}
+              className="p-2 bg-black text-white text-lg rounded-full hover:bg-red-600 hover:scale-100 transition-transform"
+              style={{
+                width: "25px",
+                height: "25px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              X
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
-                {/* Conditionally Render Dropdown Input Fields */}
-                {selectedFramework1 === "Dropdown" && (
-                  <div
-                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Dropdown" ? "opacity-100 " : "opacity-0 "
-                      }`}
-                  >
-                    <div
-                      className={`mt-4 grid ${dropdownData.length > 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-2"
-                        } gap-4 w-full max-w-[150%] overflow-y-auto`}// Set a max height for the container
-                      ref={(el) => {
-                        if (el) {
-                          setTimeout(() => {
-                            el.scrollTop = el.scrollHeight; // Scroll to the bottom when a new option is added
-                          }, 0); // Ensure this happens after the DOM updates
-                        }
-                      }}
-                    >
-                      {dropdownData.map((value, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <input
-                            value={value}
-                            onChange={(e) => {
-                              const newDropdownData = [...dropdownData];
-                              newDropdownData[index] = e.target.value;
-                              setDropdownData(newDropdownData);
+{/* Conditionally Render Dropdown Input Fields */}
+{selectedFramework1 === "Dropdown" && (
+  <div
+    className={`transition-all duration-500 ease-in-out overflow-hidden ${
+      selectedFramework1 === "Dropdown" ? "opacity-100" : "opacity-0"
+    }`}
+  >
+    <div
+      className={`mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-full`}
+      ref={(el) => {
+        if (el) {
+          setTimeout(() => {
+            el.scrollTop = el.scrollHeight; // Scroll to the bottom when a new option is added
+          }, 0); // Ensure this happens after the DOM updates
+        }
+      }}
+    >
+      {dropdownData.map((value, index) => (
+        <div key={index} className="flex items-center space-x-2">
+          <input
+            value={value}
+            onChange={(e) => {
+              const newDropdownData = [...dropdownData];
+              newDropdownData[index] = e.target.value;
+              setDropdownData(newDropdownData);
 
-                              // Add a new dropdown option if the user is typing in the last one
-                              if (
-                                index === dropdownData.length - 1 &&
-                                e.target.value !== ""
-                              ) {
-                                setDropdownData([...newDropdownData, ""]);
-                              }
-                            }}
-                            placeholder="Enter dropdown option"
-                            className="p-2 border border-gray-300 rounded flex-1"
-                          />
-                          {index >= 2 && ( // Prevent removing the first two options
-                            <button
-                              onClick={() => {
-                                const newDropdownData = dropdownData.filter((_, i) => i !== index);
-                                setDropdownData(newDropdownData);
-                              }}
-                              className="p-2 bg-black text-white font-bold text-lg rounded-full hover:bg-red-600 hover:scale-110 transition-transform"
-                              style={{
-                                width: "25px",
-                                height: "25px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              -
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                      <div className="h-10"></div> {/* Add some padding at the bottom */}
-                    </div>
-                  </div>
-                )}
-
+              // Add a new dropdown option if the user is typing in the last one
+              if (
+                index === dropdownData.length - 1 &&
+                e.target.value !== ""
+              ) {
+                setDropdownData([...newDropdownData, ""]);
+              }
+            }}
+            placeholder="Enter dropdown option"
+            className="p-2 border border-gray-300 rounded flex-1"
+          />
+          {index >= 2 && ( // Prevent removing the first two options
+            <button
+              onClick={() => {
+                const newDropdownData = dropdownData.filter((_, i) => i !== index);
+                setDropdownData(newDropdownData);
+              }}
+              className="p-2 bg-black text-white text-lg rounded-full hover:bg-red-600 hover:scale-100 transition-transform"
+              style={{
+                width: "25px",
+                height: "25px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              X
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
                 {/* Conditionally Render Large Text Input */}
                 {selectedFramework1 === "Large text input" && (
                   <div
