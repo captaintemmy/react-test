@@ -11,6 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
@@ -31,8 +32,14 @@ const SuperSimple: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = React.useState<number | null>(null);
   const [dragEnabled, setDragEnabled] = React.useState(false); // Dragging is off by default
   const [selectedFramework1, setSelectedFramework1] = React.useState(""); // State for first combobox
-  const [selectedFramework2, setSelectedFramework2] = React.useState(""); // State for second combobox
-  const [inputValue, setInputValue] = React.useState(""); // State for input field
+  const [inputValue, setInputValue] = React.useState<string[]>([""]); // State for dynamic input fields
+  const [smallText, setSmallText] = React.useState({
+    min: "",
+    max: "",
+    checked: false,
+    dropdown: "number", // Default dropdown value
+  }); // State for small text input
+  const [largeText, setLargeText] = React.useState(""); // State for large text input
 
   const toggleAccordion = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index); // Close if already open, otherwise open
@@ -49,10 +56,7 @@ const SuperSimple: React.FC = () => {
     <div className="w-full h-screen flex flex-col justify-center items-center">
       {/* Dragging Toggle Switch */}
       <div className="mb-4 flex items-center space-x-2">
-        <Switch
-          checked={dragEnabled}
-          onCheckedChange={toggleDrag}
-        />
+        <Switch checked={dragEnabled} onCheckedChange={toggleDrag} />
         <label className="text-gray-700">
           {dragEnabled ? "Dragging Enabled" : "Dragging Disabled"}
         </label>
@@ -75,26 +79,21 @@ const SuperSimple: React.FC = () => {
               }`}
           >
             {/* Accordion Header */}
-            <div className="flex items-center   ">
-              {/* Drag handle (conditionally rendered with fade-in effect) */}
+            <div className="flex items-center">
               <div
-                className={`mr-4  w-8 h-8 flex items-center justify-center transition-opacity duration-300 ${dragEnabled ? "opacity-100" : "opacity-0"
+                className={`mr-4 w-8 h-8 flex items-center justify-center transition-opacity duration-300 ${dragEnabled ? "opacity-100" : "opacity-0"
                   }`}
               >
-                <span
-                  className="drag-handle cursor-grab text-gray-500 hover:text-gray-700 flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full"
-                >
+                <span className="drag-handle cursor-grab text-gray-500 hover:text-gray-700 flex items-center justify-center w-8 h-8 bg-gray-200 rounded-full">
                   ⠿
                 </span>
               </div>
-              {/* Item text */}
               <span
-                className="flex-1 text-[#225055] text-center cursor-pointer "
+                className="flex-1 text-[#225055] text-center cursor-pointer"
                 onClick={() => toggleAccordion(items.indexOf(value))}
               >
                 {value}
               </span>
-              {/* Expand/Collapse Icon */}
               <span
                 className="ml-2 text-gray-500 cursor-pointer"
                 onClick={() => toggleAccordion(items.indexOf(value))}
@@ -103,19 +102,18 @@ const SuperSimple: React.FC = () => {
               </span>
             </div>
 
-
             {/* Accordion Content */}
             <div
-              className={`overflow-hidden transition-all duration-300 ${expandedIndex === items.indexOf(value) ? "max-h-60" : "max-h-0"
+              className={`overflow-hidden overflow-y-auto duration-300 ${expandedIndex === items.indexOf(value) ? "max-h-60" : "max-h-0"
                 }`}
             >
-              <div className="mt-2 p-2 bg-gray-100 rounded overflow-y-auto max-h-70 border border-black">
+              <div className="mt-2 p-2 bg-gray-100 rounded max-h-70 border border-black">
                 <p className="text-gray-700">
                   This is the dropdown menu for {value}.
                 </p>
 
                 {/* Combobox1 */}
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-center mt-4 items-center space-x-4">
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -156,38 +154,184 @@ const SuperSimple: React.FC = () => {
                   </Popover>
                 </div>
 
-                {/* Conditionally Render Text Input Field */}
-                <div
-                  className={`overflow-hidden transition-all duration-300 ${selectedFramework1 === "Text input" ? "max-h-20" : "max-h-0"
-                    }`}
-                >
-                  <div className="mt-4 justify-center items-center flex">
-                    <input
-                      type="text"
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      placeholder="Enter text..."
-                      className="w-full max-w-[60%] p-2 border border-gray-300 rounded"
-                    />
+                {/* Conditionally Render Small Text Input */}
+                {selectedFramework1 === "Text input" && (
+                  <div
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Text input" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                  >
+                    <div className="mt-4 grid grid-cols-2 gap-4 w-full max-w-[100%]">
+                      {/* Min Field */}
+                      <input
+                        type="number"
+                        value={smallText.min}
+                        onChange={(e) =>
+                          setSmallText((prev) => ({ ...prev, min: e.target.value }))
+                        }
+                        placeholder="Min value"
+                        className="p-2 border border-gray-300 rounded"
+                      />
+
+                      {/* Checkbox */}
+                      <div className="flex justify-center items-center">
+                        <Checkbox
+                          checked={smallText.checked}
+                          onCheckedChange={(checked) =>
+                            setSmallText((prev) => ({ ...prev, checked: Boolean(checked) }))
+                          }
+                        />
+                        <label className="ml-2 flex justify-center items-center text-gray-700">
+                          Read only
+                        </label>
+                      </div>
+
+                      {/* Max Field */}
+                      <input
+                        type="number"
+                        value={smallText.max}
+                        onChange={(e) =>
+                          setSmallText((prev) => ({ ...prev, max: e.target.value }))
+                        }
+                        placeholder="Max value"
+                        className="p-2 border border-gray-300 rounded"
+                      />
+
+                      {/* Dropdown */}
+                      <select
+                        value={smallText.dropdown}
+                        onChange={(e) =>
+                          setSmallText((prev) => ({ ...prev, dropdown: e.target.value }))
+                        }
+                        className="p-2 border border-gray-300 rounded"
+                      >
+                        <option value="number">Number</option>
+                        <option value="text">Text</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
-                {/* Conditionally Render Large Text Input Field */}
-                <div
-                  className={`overflow-hidden transition-all duration-300 ${selectedFramework1 === "Large text input" ? "max-h-48" : "max-h-0"
-                    }`}
-                >
-                  <div className="mt-4 justify-center items-center flex">
-                    <textarea
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                      placeholder="Enter large text..."
-                      className="w-full max-w-[60%] p-4 border border-gray-300 rounded h-27 resize-none" // Fixed size, slightly larger
-                    />
+                )}
+
+                {/* Conditionally Render Action Button Input Fields */}
+                {selectedFramework1 === "Action button" && (
+                  <div
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Action button" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                  >
+                    <div
+                      className={`mt-4 grid ${inputValue.length > 4 ? "grid-cols-2 grid-rows-2" : "grid-cols-2"
+                        } gap-4 w-full max-w-[150%] overflow-y-auto`}
+                      style={{ maxHeight: "300px" }} // Set a max height for the container
+                      ref={(el) => {
+                        if (el) {
+                          setTimeout(() => {
+                            el.scrollTop = el.scrollHeight; // Scroll to the bottom when a new input is added
+                          }, 0); // Ensure this happens after the DOM updates
+                        }
+                      }}
+                    >
+                      {inputValue.map((value, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            value={value}
+                            onChange={(e) => {
+                              const newInputValue = [...inputValue];
+                              newInputValue[index] = e.target.value;
+                              setInputValue(newInputValue);
+
+                              // Add a new input field if the user is typing in the last one
+                              if (
+                                index === inputValue.length - 1 &&
+                                e.target.value !== ""
+                              ) {
+                                setInputValue([...newInputValue, ""]);
+                              }
+                            }}
+                            placeholder="Enter text"
+                            className="p-2 border border-gray-300 rounded flex-1"
+                          />
+                          {index >= 2 && ( // Prevent removing the first two inputs
+                            <button
+                              onClick={() => {
+                                const newInputValue = inputValue.filter((_, i) => i !== index);
+                                setInputValue(newInputValue);
+                              }}
+                              className="p-2 bg-black text-white  text-lg rounded-full hover:bg-red-600 hover:scale-110 transition-transform"
+                              style={{
+                                width: "25px",
+                                height: "25px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              X
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      <div className="h-10"></div> {/* Add some padding at the bottom */}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Conditionally Render Large Text Input */}
+                {selectedFramework1 === "Large text input" && (
+                  <div
+                    className={`transition-all duration-500 ease-in-out overflow-hidden ${selectedFramework1 === "Large text input" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                  >
+                    <div className="mt-4 grid grid-cols-2 gap-4 w-full max-w-[100%]">
+                      {/* Min Field */}
+                      <input
+                        type="number"
+                        value={smallText.min}
+                        onChange={(e) =>
+                          setSmallText((prev) => ({ ...prev, min: e.target.value }))
+                        }
+                        placeholder="Min value"
+                        className="p-2 border border-gray-300 rounded"
+                      />
+
+                      {/* Checkbox */}
+                      <div className="flex justify-center items-center">
+                        <Checkbox
+                          checked={smallText.checked}
+                          onCheckedChange={(checked) =>
+                            setSmallText((prev) => ({ ...prev, checked: Boolean(checked) }))
+                          }
+                        />
+                        <label className="ml-2 flex justify-center items-center text-gray-700">
+                          Read only
+                        </label>
+                      </div>
+
+                      {/* Max Field */}
+                      <input
+                        type="number"
+                        value={smallText.max}
+                        onChange={(e) =>
+                          setSmallText((prev) => ({ ...prev, max: e.target.value }))
+                        }
+                        placeholder="Max value"
+                        className="p-2 border border-gray-300 rounded"
+                      />
+
+                      {/* Dropdown */}
+                      <select
+                        value={smallText.dropdown}
+                        onChange={(e) =>
+                          setSmallText((prev) => ({ ...prev, dropdown: e.target.value }))
+                        }
+                        className="p-2 border border-gray-300 rounded"
+                      >
+                        <option value="number">Number</option>
+                        <option value="text">Text</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-
           </li>
         )}
         disabled={!dragEnabled} // Disable dragging when dragEnabled is false

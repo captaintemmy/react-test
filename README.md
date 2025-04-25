@@ -47,3 +47,5 @@ https://ui.shadcn.com/docs/components/popover#installation command: npx shadcn@l
 https://ui.shadcn.com/docs/components/command#installation command: npx shadcn@latest add command
 
 https://ui.shadcn.com/docs/components/button command: npx shadcn@latest add button
+
+https://ui.shadcn.com/docs/components/checkbox command: npx shadcn@latest add checkbox
